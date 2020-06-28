@@ -1,13 +1,23 @@
 # seq2point-nilm
-Sequence-to-point learning for non-intrusive load monitoring
+**Sequence-to-point (seq2point) learning for non-intrusive load monitoring (NILM)**
+
+Seq2point learning is a generic and as well as simple framework for NILM [1-2]. It learns a mapping from the mains window Y to the midpoint x of the curresponding appliance. From probabilistic perspective, seq2point learns a condistional distribution p(x|Y) (see details in [2]).
+
+Similarly, the seq2seq learning proposed in [2] learns a mapping from sequence to sequence which could be seen as an extension of seq2point.
+
+Note that seq2point learning is a framework and so you can choose any architectures including CNN, RNN and AutoEncoders if you are employing deep neural networks. Indeed, you can also choose logistic regression, SVM, and Gaussian Process regression models because all these models are instances for representing a mapping.
 
 This code is written by Mingjun Zhong adapted from Michele D'Incecco and Jack Barber:
+
 https://github.com/MingjunZhong/transferNILM.
+
 https://github.com/JackBarber98/pruned-nilm.
  
 
 References:
+
 [1] DIncecco, Michele, Stefano Squartini, and Mingjun Zhong. "Transfer Learning for Non-Intrusive Load Monitoring." arXiv preprint arXiv:1902.08835 (2019).
+
 [2] Chaoyun Zhang, Mingjun Zhong, Zongzuo Wang, Nigel Goddard, and Charles Sutton. "Sequence-to-point learning with neural networks for nonintrusive load monitoring."
 Thirty-Second AAAI Conference on Artificial Intelligence (AAAI-18), Feb. 2-7, 2018.
 
@@ -27,15 +37,15 @@ I will be rewriting how to use the code. You can only use the following instruct
 
 0. This software was tested on Ubuntu 16.04 LTS
 
-1. Create your virtual environment Python > 3.5
+1. Create your virtual environment Python 3.5-3.8
 
-2. Install Tensorflow > 1.4
+2. Install Tensorflow = 2.0.0
 
     * Follow official instruction on https://www.tensorflow.org/install/
     
     * Remember a GPU support is highly recommended for training
     
-3. Install Keras > 2.1.5
+3. Install Keras > 2.1.5 (Tested on Keras 2.3.1)
 
     * Follow official instruction on https://keras.io/
     
@@ -54,31 +64,46 @@ washing machine.
 Directory tree:
 
 ``` bash
-├── Arguments.py
-├── cnnModel.py
-├── DataProvider.py
-├── dataset_management
-│   ├── functions.py
-│   ├── redd
-│   │   ├── create_trainset_redd.py
-│   │   └── redd_parameters.py
-│   ├── refit
-│   │   └── create_dataset.py
-│   └── ukdale
-│       ├── create_trainset_ukdale.py
-│       └── ukdale_parameters.py
+seq2point-nilm/
+├── appliance_data.py
+├── data_feeder.py
+├── dataset_management/
+│   ├── functions.py
+│   ├── redd/
+│   │   ├── create_trainset_redd.py
+│   │   ├── house_plot.py
+│   │   ├── redd_create_tes-set.py
+│   │   ├── redd_parameters.py
+│   │   └── redd_raw_plot.py
+│   ├── refit/
+│   │   ├── create_dataset.py
+│   │   ├── dataset_infos.py
+│   │   ├── dataset_plot.py
+│   │   ├── excelExporter.py
+│   │   ├── merge_fridges.py
+│   │   └── raw_house_data_plot.py
+│   └── ukdale/
+│       ├── create_test_set.py
+│       ├── create_trainset_ukdale.py
+│       ├── excelExporterUK.py
+│       ├── house_data_plot.py
+│       ├── import_ext.py
+│       ├── testset_plot.py
+│       └── ukdale_parameters.py
 ├── environment.yml
-├── images
-│   ├── model.png
-│   ├── s2p.png
-│   └── washingmachine.png
-├── Logger.py
-├── models
-├── NetFlowExt.py
-├── nilm_metric.py
-├── result
+├── images/
+│   ├── model.png
+│   ├── s2p.png
+│   └── washingmachine.png
+├── model.png
+├── model_structure.py
+├── README.md
+├── remove_space.py
+├── saved_models/
 ├── seq2point_test.py
-└── seq2point_train.py
+├── seq2point_train.py
+├── test_main.py
+└── train_main.py
 ```
 
 ## **Create REFIT, UK-DALE or REDD dataset**
