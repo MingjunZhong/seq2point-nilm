@@ -23,13 +23,6 @@ Thirty-Second AAAI Conference on Artificial Intelligence (AAAI-18), Feb. 2-7, 20
 
 Seq2point model: the input is the mains windows (599 timepoints); and output is the midpoint of the corresponding appliance windows.
 
-
-**Important**
-
-I will be rewriting how to use the code. You can only use the following instruction to prepare the training, validation and test data. The training code has been changed to TensorFlow-2.0.
-
-**The following code instructing training and testing was too old - do not follow.**
-
 ![](images/s2p.png)
 
 
@@ -177,134 +170,10 @@ Appliances and training set composition for this project:
 | washingmachine  | 2,3             |     3       |   1    |
 
 
-## **Training**
-The seq2point_train.py script is the entry point for the training phase. It loads the training dataset, including validation, and it starts the training.
-It uses a script to load CSV dataset file into memory, prepares pairs of 599 samples aggregate data and 1 sample midpoint ground truth.
-After randomly shuffle them, batches of BATCHSIZE size are input to the network for backpropagation purpose.
-Once the training is cmplete, according to the eary stopping criterion, the trained KERAS model (and model's parameters) will be available into the folder you have selected.
+**The following code instructing training and testing was too old - do not follow.**
 
-Training default parameters:
+**I will write instructions how to use the code. Currently, you just run train_main.py and test_main.py. Do remember to choose your parameters in these two files correspondingly.**
 
-* Input window: 599 samples
+To train the modoel, just run `python train_main.py` or in IDE environment, e.g., Spyder, run train_main.py
 
-* Number of maximum: epochs 50
-
-* Batchsize: 1000
-
-* Early stopping
-    * min epochs: 5
-    * patience: 5
-
-* Adam optimiser:
-    * Learning rate: 0.001   
-    *  Beta1:  0.9
-    *  Beta2: 0.999    
-    *  Epsilon: 10^{-8}
-
-
-`python seq2point_train.py --help`
-
-```
-optional arguments:
-  -h, --help            show this help message and exit
-  --appliance_name APPLIANCE_NAME
-                        the name of target appliance
-  --datadir DATADIR     this is the directory of the training samples
-  --pretrainedmodel_dir PRETRAINEDMODEL_DIR
-                        this is the directory of the pre-trained models
-  --save_dir SAVE_DIR   this is the directory to save the trained models
-  --batchsize BATCHSIZE
-                        The batch size of training examples
-  --n_epoch N_EPOCH     The number of epochs.
-  --save_model SAVE_MODEL
-                        Save the learnt model: 0 -- not to save the learnt
-                        model parameters; n (n>0) -- to save the model params
-                        every n steps; -1 -- only save the learnt model params
-                        at the end of training.
-  --dense_layers DENSE_LAYERS
-                        : 1 -- One dense layers (default Seq2point); 2 -- Two
-                        dense layers; 3 -- Three dense layers.
-  --transfer_model TRANSFER_MODEL
-                        True: using entire pre-trained model. False: retrain
-                        the entire pre-trained model; This will override the
-                        'transfer_cnn' and 'cnn' parameters; The
-                        appliance_name parameter will use to retrieve the
-                        entire pre-trained model of that appliance.
-  --transfer_cnn TRANSFER_CNN
-                        True: using a pre-trained CNN False: not using a pre-
-                        trained CNN.
-  --cnn CNN             The CNN trained by which appliance to load (pretrained
-                        model).
-  --gpus GPUS           Number of GPUs to use: n -- number of GPUs the system
-                        should use; -1 -- do not use any GPU.
-  --crop_dataset CROP_DATASET
-                        for debugging porpose should be helpful to crop the
-                        training dataset size
-  --ram RAM             Maximum number of rows of csv dataset can handle
-                        without loading in chunks
-
-```
-
-Example:
-
-Train the whole model, randomly initialised, using 10000 data points:
-
-`python seq2point_train.py --appliance_name 'kettle' --datadir './dataset_management/refit/' --save_dir './trained_model' --transfer_model False --crop_dataset 10000`
-
-Transfer learning: train the whole model, starting from a pre-trained model: you must provide the pre-trained model directory (kettle in this example).
-
-`python seq2point_train.py --appliance_name 'kettle' --datadir './dataset_management/refit/' --save_dir './trained_model' --transfer_model True --pretrainedmodel_dir './pretrained_model' --crop_dataset 10000`
-
-Transfer learning: only train the dense layers starting from a pre-trained CNN; you must provide the pre-trained model directory (washingmachine in this example).
-
-`python seq2point_train.py --appliance_name 'kettle' --datadir './dataset_management/refit/' --save_dir './trained_model' --transfer_cnn True --cnn washingmachine --pretrainedmodel_dir './pretrained_model' --crop_dataset 10000`
-
-## **Test**
-The seq2point_test.py script is the entry point for testing the network. In a similar way to the training windows are prepared, without shuffling, and sent to the network.
-The prediction is stored and saved in .npy file together with aggregate and ground truth. If selected, the script will generate a plot (an example below).
-
-`python seq2point_test.py -h`
-
-```
-optional arguments:
-  -h, --help            show this help message and exit
-  --appliance_name APPLIANCE_NAME
-                        the name of target appliance
-  --datadir DATADIR     this is the directory to the test data
-  --trained_model_dir TRAINED_MODEL_DIR
-                        this is the directory to the trained models
-  --save_results_dir SAVE_RESULTS_DIR
-                        this is the directory to save the predictions
-  --nosOfWindows NOSOFWINDOWS
-                        The number of windows for prediction for each
-                        iteration.
-  --test_type TEST_TYPE
-                        Type of the test set to load: test -- test on the
-                        proper test set; train -- test on a aready prepared
-                        slice of the train set; val -- test on the validation
-                        set; uk -- test on UK-DALE; redd -- test on REDD.
-  --dense_layers DENSE_LAYERS
-                        : 1 -- One dense layers (default Seq2point); 2 -- Two
-                        dense layers; 3 -- three dense layers the CNN.
-  --transfer TRANSFER   Using a pre-trained CNN (True) or not (False).
-  --plot_results PLOT_RESULTS
-                        To plot the predicted appliance against ground truth
-                        or not.
-  --cnn CNN             The trained CNN by which appliance to load.
-  --crop_dataset CROP_DATASET
-                        for debugging porpose should be helpful to crop the
-                        test dataset size
-```                                 
-Example:
-
-Test the model using 10000 data points:
-
-`python seq2point_test.py --appliance_name 'kettle' --datadir './dataset_management/refit/' --trained_model_dir './trained_model' --save_results_dir './result' --transfer False --crop_dataset 10000 --plot_results False`
-
-Transfer learning (Testing on kettle, but the CNN was trained by using washing machine):
-
-`python seq2point_test.py --appliance_name 'kettle' --datadir './dataset_management/refit/' --trained_model_dir './trained_model' --save_results_dir './result' --transfer True --cnn washingmachine --crop_dataset 10000 --plot_results False`
-
-
-Test output example plot for washing machine:
-![](images/washingmachine.png)
+Any questions, please write email to me: mingjun.zhong@abdn.ac.uk
