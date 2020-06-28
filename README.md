@@ -14,6 +14,12 @@ Thirty-Second AAAI Conference on Artificial Intelligence (AAAI-18), Feb. 2-7, 20
 Seq2point model: the input is the mains windows (599 timepoints); and output is the midpoint of the corresponding appliance windows.
 
 
+**Important**
+
+I will be rewriting how to use the code. You can only use the following instruction to prepare the training, validation and test data. The training code has been changed to TensorFlow-2.0.
+
+**The following code instructing training and testing was too old - do not follow.**
+
 ![](images/s2p.png)
 
 
