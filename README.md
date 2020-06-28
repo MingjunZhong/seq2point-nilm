@@ -21,7 +21,7 @@ References:
 [2] Chaoyun Zhang, Mingjun Zhong, Zongzuo Wang, Nigel Goddard, and Charles Sutton. "Sequence-to-point learning with neural networks for nonintrusive load monitoring."
 Thirty-Second AAAI Conference on Artificial Intelligence (AAAI-18), Feb. 2-7, 2018.
 
-Seq2point model: the input is the mains windows (599 timepoints); and output is the midpoint of the corresponding appliance windows.
+Seq2point model: the input is the mains windows (599 timepoints); and output is the midpoint of the corresponding appliance windows. Note that you can choose other sizes of the inpurt window, for example, 299, 399, etc.
 
 ![](images/s2p.png)
 
@@ -170,9 +170,7 @@ Appliances and training set composition for this project:
 | washingmachine  | 2,3             |     3       |   1    |
 
 
-**The following code instructing training and testing was too old - do not follow.**
-
-**I will write instructions how to use the code. Currently, you just run train_main.py and test_main.py. Do remember to choose your parameters in these two files correspondingly.**
+**I will write instructions how to use the code with more details. Currently, you just run train_main.py and test_main.py. Do remember to choose your parameters in these two files correspondingly.**
 
 To train the modoel, just run `python train_main.py` or in IDE environment, e.g., Spyder, run train_main.py
 
